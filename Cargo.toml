@@ -1,0 +1,64 @@
+[package]
+name = "halp"
+version = "0.2.0" # bumped by release.sh
+description = "A CLI tool to get help with CLI tools ð"
+authors = ["Orhun ParmaksÄ±z <orhunparmaksiz@gmail.com>"]
+license = "MIT OR Apache-2.0"
+readme = "README.md"
+homepage = "https://github.com/orhun/halp"
+repository = "https://github.com/orhun/halp"
+categories = ["command-line-utilities"]
+keywords = ["cli", "help"]
+default-run = "halp"
+edition = "2021"
+rust-version = "1.74.1"
+
+[[bin]]
+name = "halp-completions"
+path = "src/bin/completions.rs"
+
+[[bin]]
+name = "halp-mangen"
+path = "src/bin/mangen.rs"
+
+[[bin]]
+name = "halp-test"
+path = "src/bin/test.rs"
+
+[dependencies]
+clap = { version = "4.5.42", features = ["derive", "env", "wrap_help"] }
+clap_complete = "4.5.55"
+clap_mangen = "0.2.29"
+colored = "3.0.0"
+console = "0.16.0"
+dialoguer = { version = "0.11.0", default-features = false }
+dirs = "6.0.0"
+process_control = "5.1.1"
+serde = { version = "1.0.219", features = ["derive"] }
+thiserror = "2.0.12"
+toml = "0.9.4"
+ureq = "3.0.12"
+
+[dev-dependencies]
+pretty_assertions = "1.4.1"
+
+[profile.dev]
+opt-level = 0
+debug = true
+panic = "abort"
+
+[profile.test]
+opt-level = 0
+debug = true
+
+[profile.release]
+opt-level = 3
+debug = false
+panic = "unwind"
+lto = true
+codegen-units = 1
+strip = true
+
+[profile.bench]
+opt-level = 3
+debug = false
