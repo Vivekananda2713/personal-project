@@ -1,239 +1,362 @@
-# Full Stack FastAPI Template
+<div align="center">
 
-<a href="https://github.com/fastapi/full-stack-fastapi-template/actions?query=workflow%3ATest" target="_blank"><img src="https://github.com/fastapi/full-stack-fastapi-template/workflows/Test/badge.svg" alt="Test"></a>
-<a href="https://coverage-badge.samuelcolvin.workers.dev/redirect/fastapi/full-stack-fastapi-template" target="_blank"><img src="https://coverage-badge.samuelcolvin.workers.dev/fastapi/full-stack-fastapi-template.svg" alt="Coverage"></a>
+  <a href="https://lospec.com/gallery/orhun/octopus">
+    <img src="assets/halp-logo.png" width="400">
+  </a>
 
-## Technology Stack and Features
+<h4>A CLI tool to get help with CLI tools ð</h4>
 
-- â¡ [**FastAPI**](https://fastapi.tiangolo.com) for the Python backend API.
-    - ð§° [SQLModel](https://sqlmodel.tiangolo.com) for the Python SQL database interactions (ORM).
-    - ð [Pydantic](https://docs.pydantic.dev), used by FastAPI, for the data validation and settings management.
-    - ð¾ [PostgreSQL](https://www.postgresql.org) as the SQL database.
-- ð [React](https://react.dev) for the frontend.
-    - ð Using TypeScript, hooks, Vite, and other parts of a modern frontend stack.
-    - ð¨ [Chakra UI](https://chakra-ui.com) for the frontend components.
-    - ð¤ An automatically generated frontend client.
-    - ð§ª [Playwright](https://playwright.dev) for End-to-End testing.
-    - ð¦ Dark mode support.
-- ð [Docker Compose](https://www.docker.com) for development and production.
-- ð Secure password hashing by default.
-- ð JWT (JSON Web Token) authentication.
-- ð« Email based password recovery.
-- â Tests with [Pytest](https://pytest.org).
-- ð [Traefik](https://traefik.io) as a reverse proxy / load balancer.
-- ð¢ Deployment instructions using Docker Compose, including how to set up a frontend Traefik proxy to handle automatic HTTPS certificates.
-- ð­ CI (continuous integration) and CD (continuous deployment) based on GitHub Actions.
+<a href="https://github.com/orhun/halp/releases"><img src="https://img.shields.io/github/v/release/orhun/halp?style=flat&amp;labelColor=342a5e&amp;color=684d81&amp;logo=GitHub&amp;logoColor=white" alt="GitHub Release"></a>
+<a href="https://crates.io/crates/halp/"><img src="https://img.shields.io/crates/v/halp?style=flat&amp;labelColor=342a5e&amp;color=684d81&amp;logo=Rust&amp;logoColor=white" alt="Crate Release"></a>
+<a href="https://codecov.io/gh/orhun/halp"><img src="https://img.shields.io/codecov/c/gh/orhun/halp?style=flat&amp;labelColor=342a5e&amp;color=684d81&amp;logo=Codecov&amp;logoColor=white" alt="Coverage"></a>
+<br>
+<a href="https://github.com/orhun/halp/actions?query=workflow%3A%22Continuous+Integration%22"><img src="https://img.shields.io/github/actions/workflow/status/orhun/halp/ci.yml?branch=main&amp;style=flat&amp;labelColor=1c1d42&amp;color=4f396a&amp;logo=GitHub%20Actions&amp;logoColor=white" alt="Continuous Integration"></a>
+<a href="https://github.com/orhun/halp/actions?query=workflow%3A%22Continuous+Deployment%22"><img src="https://img.shields.io/github/actions/workflow/status/orhun/halp/cd.yml?style=flat&amp;labelColor=1c1d42&amp;color=4f396a&amp;logo=GitHub%20Actions&amp;logoColor=white&amp;label=deploy" alt="Continuous Deployment"></a>
+<a href="https://hub.docker.com/r/orhunp/halp"><img src="https://img.shields.io/github/actions/workflow/status/orhun/halp/docker.yml?style=flat&amp;labelColor=1c1d42&amp;color=4f396a&amp;label=docker&amp;logo=Docker&amp;logoColor=white" alt="Docker Builds"></a>
+<a href="https://docs.rs/halp/"><img src="https://img.shields.io/docsrs/halp?style=flat&amp;labelColor=1c1d42&amp;color=4f396a&amp;logo=Rust&amp;logoColor=white" alt="Documentation"></a>
 
-### Dashboard Login
+<img src="./assets/halp-demo.gif" alt="halp demo">
 
-[![API docs](img/login.png)](https://github.com/fastapi/full-stack-fastapi-template)
+</div>
 
-### Dashboard - Admin
+`halp` aims to help find the **correct arguments** for command-line tools by checking the predefined list of commonly used options/flags. Additionally, it provides a prompt for quick access to the **manual page** or **cheat sheet** of the given command.
 
-[![API docs](img/dashboard.png)](https://github.com/fastapi/full-stack-fastapi-template)
+If you deal with command-line tools often, it might take some time to figure out how to get help or check the version of a particular command (especially when shell completions are not available). In that case, you might try the most-known flags such as `-h` and `-v` but unfortunately not all the command-line tools follow these conventions (either due to conflicts with other flags or they just use another form). Instead of _brute-forcing_ manually into getting help, you can run `halp <command>` and it will check the following arguments for you:
 
-### Dashboard - Create User
+- for **help**: `-h`, `--help`, `help`, `-H`
+- for **version info**: `-v`, `-V`, `--version`, `version`
 
-[![API docs](img/dashboard-create.png)](https://github.com/fastapi/full-stack-fastapi-template)
+If one of these arguments succeeds (with exit code 0), it prints the output and exits. This way, you can get informed about the version and help in one single command. You can also customize this list with a configuration file or provide a list of arguments via command-line arguments.
 
-### Dashboard - Items
+On the other hand, if you _really_ need help, you can use the `plz` subcommand which will prompt a selection for:
 
-[![API docs](img/dashboard-items.png)](https://github.com/fastapi/full-stack-fastapi-template)
+1. show the **man page** (runs [`man(1)`](https://man7.org/linux/man-pages/man1/man.1.html))
+2. show the **cheat sheet** (via [`cheat.sh`](http://cheat.sh))
 
-### Dashboard - User Settings
+<details>
+  <summary>Table of Contents</summary>
 
-[![API docs](img/dashboard-user-settings.png)](https://github.com/fastapi/full-stack-fastapi-template)
+<!-- vim-markdown-toc GFM -->
 
-### Dashboard - Dark Mode
+- [Example](#example)
+- [Installation](#installation)
+  - [Cargo](#cargo)
+  - [Arch Linux](#arch-linux)
+  - [Docker](#docker)
+    - [Images](#images)
+    - [Usage](#usage)
+    - [Building](#building)
+  - [Binary releases](#binary-releases)
+  - [Build from source](#build-from-source)
+- [Usage](#usage-1)
+  - [`plz`](#plz)
+- [Examples](#examples)
+  - [Check `help` and `version` (default)](#check-help-and-version-default)
+  - [Check a custom argument](#check-a-custom-argument)
+  - [Disable defaults](#disable-defaults)
+  - [Verbose logging](#verbose-logging)
+  - [Get additional help (via `plz`)](#get-additional-help-via-plz)
+    - [Custom pager](#custom-pager)
+    - [Custom cheat.sh host URL](#custom-cheatsh-host-url)
+- [Configuration](#configuration)
+- [Funding](#funding)
+- [Contributing](#contributing)
+- [License](#license)
+- [Copyright](#copyright)
 
-[![API docs](img/dashboard-dark.png)](https://github.com/fastapi/full-stack-fastapi-template)
+<!-- vim-markdown-toc -->
 
-### Interactive API Documentation
+</details>
 
-[![API docs](img/docs.png)](https://github.com/fastapi/full-stack-fastapi-template)
+### Example
 
-## How To Use It
+Have you ever experienced this:
 
-You can **just fork or clone** this repository and use it as is.
-
-â¨ It just works. â¨
-
-### How to Use a Private Repository
-
-If you want to have a private repository, GitHub won't allow you to simply fork it as it doesn't allow changing the visibility of forks.
-
-But you can do the following:
-
-- Create a new GitHub repo, for example `my-full-stack`.
-- Clone this repository manually, set the name with the name of the project you want to use, for example `my-full-stack`:
-
-```bash
-git clone git@github.com:fastapi/full-stack-fastapi-template.git my-full-stack
+```sh
+$ cli_tool -v
+unknown flag -v
 ```
 
-- Enter into the new directory:
-
-```bash
-cd my-full-stack
+```sh
+$ cli_tool -V
+unknown flag -V
 ```
 
-- Set the new origin to your new repository, copy it from the GitHub interface, for example:
-
-```bash
-git remote set-url origin git@github.com:octocat/my-full-stack.git
+```sh
+$ cli_tool -h
+unknown flag -h
 ```
 
-- Add this repo as another "remote" to allow you to get updates later:
-
-```bash
-git remote add upstream git@github.com:fastapi/full-stack-fastapi-template.git
+```sh
+$ asdjw1jwhdajh1idojad # frustration
+bash: asdjw1jwhdajh1idojad: command not found
 ```
 
-- Push the code to your new repository:
-
-```bash
-git push -u origin master
+```sh
+$ cli_tool --help # f*cking finally!
+Some CLI Tool Version 1.42.69
+Usage:
+  cli_tool <flags> <args> [--parameter1 value1 --parameter2 value2 ...]
 ```
 
-### Update From the Original Template
+Whereas with `halp`:
 
-After cloning the repository, and after doing changes, you might want to get the latest changes from this original template.
+```
+$ halp cli_tool
 
-- Make sure you added the original repository as a remote, you can check it with:
+(Â°ã­Â°)  checking 'cli_tool -v'
+(Ãï¹Ã)      fail '-v' argument not found.
+(Â°ã­Â°)  checking 'cli_tool -V'
+(Ãï¹Ã)      fail '-V' argument not found.
+(Â°ã­Â°)  checking 'cli_tool -h'
+(Ãï¹Ã)      fail '-h' argument not found.
+(Â°ã­Â°)  checking 'cli_tool --help'
+\(^ã®^)/ success '--help' argument found!
 
-```bash
-git remote -v
-
-origin    git@github.com:octocat/my-full-stack.git (fetch)
-origin    git@github.com:octocat/my-full-stack.git (push)
-upstream    git@github.com:fastapi/full-stack-fastapi-template.git (fetch)
-upstream    git@github.com:fastapi/full-stack-fastapi-template.git (push)
+Some CLI Tool Version 1.42.69
+Usage:
+  cli_tool <flags> <args> [--parameter1 value1 --parameter2 value2 ...]
 ```
 
-- Pull the latest changes without merging:
+## Installation
 
-```bash
-git pull --no-commit upstream master
+<details>
+  <summary>Packaging status</summary>
+
+[![Packaging status](https://repology.org/badge/vertical-allrepos/halp.svg)](https://repology.org/project/halp/versions)
+
+</details>
+
+### Cargo
+
+`halp` can be installed from [crates.io](https://crates.io/crates/halp):
+
+```sh
+cargo install halp
 ```
 
-This will download the latest changes from this template without committing them, that way you can check everything is right before committing.
+The minimum supported Rust version is `1.74.1`.
 
-- If there are conflicts, solve them in your editor.
+### Arch Linux
 
-- Once you are done, commit the changes:
+`halp` can be installed from the [community repository](https://archlinux.org/packages/community/x86_64/halp/) using [pacman](https://wiki.archlinux.org/title/Pacman):
 
-```bash
-git merge --continue
+```sh
+pacman -S halp
 ```
 
-### Configure
+Or you can install the available [AUR packages](https://aur.archlinux.org/packages/?O=0&SeB=b&K=halp&outdated=&SB=n&SO=a&PP=50&do_Search=Go) using an [AUR helper](https://wiki.archlinux.org/index.php/AUR_helpers). For example,
 
-You can then update configs in the `.env` files to customize your configurations.
-
-Before deploying it, make sure you change at least the values for:
-
-- `SECRET_KEY`
-- `FIRST_SUPERUSER_PASSWORD`
-- `POSTGRES_PASSWORD`
-
-You can (and should) pass these as environment variables from secrets.
-
-Read the [deployment.md](./deployment.md) docs for more details.
-
-### Generate Secret Keys
-
-Some environment variables in the `.env` file have a default value of `changethis`.
-
-You have to change them with a secret key, to generate secret keys you can run the following command:
-
-```bash
-python -c "import secrets; print(secrets.token_urlsafe(32))"
+```sh
+paru -S halp-git
 ```
 
-Copy the content and use that as password / secret key. And run that again to generate another secure key.
+Alternatively, you can clone the AUR package and then build it with [makepkg](https://wiki.archlinux.org/index.php/Makepkg). For example,
 
-## How To Use It - Alternative With Copier
-
-This repository also supports generating a new project using [Copier](https://copier.readthedocs.io).
-
-It will copy all the files, ask you configuration questions, and update the `.env` files with your answers.
-
-### Install Copier
-
-You can install Copier with:
-
-```bash
-pip install copier
+```sh
+git clone https://aur.archlinux.org/halp-git.git && cd halp-git && makepkg -si
 ```
 
-Or better, if you have [`pipx`](https://pipx.pypa.io/), you can run it with:
+### Docker
 
-```bash
-pipx install copier
+#### Images
+
+Docker builds are [automated](./.github/workflows/docker.yml) and images are available in the following registries:
+
+- [Docker Hub](https://hub.docker.com/r/orhunp/halp)
+- [GitHub Container Registry](https://github.com/orhun/halp/pkgs/container/halp)
+
+#### Usage
+
+The following commands can be used to get help for a binary inside the container:
+
+```sh
+docker run --rm -it "orhunp/halp:${TAG:-latest}" whoami
+docker run --rm -it "orhunp/halp:${TAG:-latest}" plz whoami
 ```
 
-**Note**: If you have `pipx`, installing copier is optional, you could run it directly.
+Or you can provide a custom binary as follows (please note that you might get shared library errors):
 
-### Generate a Project With Copier
-
-Decide a name for your new project's directory, you will use it below. For example, `my-awesome-project`.
-
-Go to the directory that will be the parent of your project, and run the command with your project's name:
-
-```bash
-copier copy https://github.com/fastapi/full-stack-fastapi-template my-awesome-project --trust
+```sh
+docker run -v "bin:/app/bin:rw" --rm -it "orhunp/halp:${TAG:-latest}" -v ./bin
 ```
 
-If you have `pipx` and you didn't install `copier`, you can run it directly:
+#### Building
 
-```bash
-pipx run copier copy https://github.com/fastapi/full-stack-fastapi-template my-awesome-project --trust
+Custom Docker images can be built from the [Dockerfile](./Dockerfile):
+
+```sh
+docker build -t halp .
 ```
 
-**Note** the `--trust` option is necessary to be able to execute a [post-creation script](https://github.com/fastapi/full-stack-fastapi-template/blob/master/.copier/update_dotenv.py) that updates your `.env` files.
+### Binary releases
 
-### Input Variables
+See the available binaries for different targets from the [releases page](https://github.com/orhun/halp/releases). They are automated via [Continuous Deployment](.github/workflows/cd.yml) workflow
 
-Copier will ask you for some data, you might want to have at hand before generating the project.
+Release tarballs are signed with the following PGP key: [0xFB41AE0358378256](https://keyserver.ubuntu.com/pks/lookup?search=0xFB41AE0358378256&op=vindex)
 
-But don't worry, you can just update any of that in the `.env` files afterwards.
+### Build from source
 
-The input variables, with their default values (some auto generated) are:
+1. Clone the repository.
 
-- `project_name`: (default: `"FastAPI Project"`) The name of the project, shown to API users (in .env).
-- `stack_name`: (default: `"fastapi-project"`) The name of the stack used for Docker Compose labels and project name (no spaces, no periods) (in .env).
-- `secret_key`: (default: `"changethis"`) The secret key for the project, used for security, stored in .env, you can generate one with the method above.
-- `first_superuser`: (default: `"admin@example.com"`) The email of the first superuser (in .env).
-- `first_superuser_password`: (default: `"changethis"`) The password of the first superuser (in .env).
-- `smtp_host`: (default: "") The SMTP server host to send emails, you can set it later in .env.
-- `smtp_user`: (default: "") The SMTP server user to send emails, you can set it later in .env.
-- `smtp_password`: (default: "") The SMTP server password to send emails, you can set it later in .env.
-- `emails_from_email`: (default: `"info@example.com"`) The email account to send emails from, you can set it later in .env.
-- `postgres_password`: (default: `"changethis"`) The password for the PostgreSQL database, stored in .env, you can generate one with the method above.
-- `sentry_dsn`: (default: "") The DSN for Sentry, if you are using it, you can set it later in .env.
+```sh
+git clone https://github.com/orhun/halp && cd halp/
+```
 
-## Backend Development
+2. Build.
 
-Backend docs: [backend/README.md](./backend/README.md).
+```sh
+CARGO_TARGET_DIR=target cargo build --release
+```
 
-## Frontend Development
+Binary will be located at `target/release/halp`.
 
-Frontend docs: [frontend/README.md](./frontend/README.md).
+## Usage
 
-## Deployment
+```
+halp [OPTIONS] <CMD>
+```
 
-Deployment docs: [deployment.md](./deployment.md).
+```
+Options:
+      --check <ARG>    Sets the argument to check
+      --no-version     Disable checking the version information
+      --no-help        Disable checking the help information
+  -c, --config <PATH>  Sets the configuration file [env: HALP_CONFIG=]
+  -t, --timeout <S>    Sets the timeout for the command [default: 5]
+  -v, --verbose        Enables verbose logging
+  -h, --help           Print help
+  -V, --version        Print version
+```
 
-## Development
+### `plz`
 
-General development docs: [development.md](./development.md).
+```
+halp [OPTIONS] plz <CMD>
+```
 
-This includes using Docker Compose, custom local domains, `.env` configurations, etc.
+```
+Options:
+  -m, --man-cmd <MAN_CMD>   Sets the manual page command to run
+      --cheat-sh-url <URL>  Use a custom URL for cheat.sh [env: CHEAT_SH_URL=]
+  -p, --pager <PAGER>       Sets the pager to use
+      --no-pager            Disables the pager
+  -h, --help                Print help
+```
 
-## Release Notes
+## Examples
 
-Check the file [release-notes.md](./release-notes.md).
+#### Check `help` and `version` (default)
+
+```sh
+halp whoami
+```
+
+![halp example I](./assets/halp-example1.gif)
+
+#### Check a custom argument
+
+```sh
+halp --check "\--silent" zps
+```
+
+(You can escape `-` with using `\-`.)
+
+You can also provide multiple arguments as follows:
+
+```sh
+halp --check "help" --check "test" menyoki
+```
+
+#### Disable defaults
+
+```sh
+halp --no-version sha512sum
+```
+
+```sh
+halp --no-help sha512sum
+```
+
+#### Verbose logging
+
+```sh
+halp --verbose git-cliff
+```
+
+This will result in `stderr`/`stdout` being printed if there was an error. For example:
+
+```sh
+(Â°ã­Â°)  checking 'git-cliff -v'
+(Ãï¹Ã)      fail '-v' argument not found.
+(o_O)      debug
+stdout:
+ WARN  git_cliff > "cliff.toml" is not found, using the default configuration.
+ ERROR git_cliff > Git error: `could not find repository from '.'; class=Repository (6); code=NotFound (-3)`
+```
+
+#### Get additional help (via `plz`)
+
+```sh
+halp plz vim
+```
+
+![halp example II](./assets/halp-example2.gif)
+
+##### Custom pager
+
+```sh
+halp plz --pager bat vim
+```
+
+To disable the pager:
+
+```sh
+halp plz --no-pager bat vim
+```
+
+##### Custom cheat.sh host URL
+
+```sh
+halp plz --cheat-sh-url https://cht.sh vim
+```
+
+## Configuration
+
+`halp` can be configured with a configuration file that uses the [TOML](https://en.wikipedia.org/wiki/TOML) format. It can be specified via `--config` or `HALP_CONFIG` environment variable. It can also be placed in one of the following global locations:
+
+- `<config_dir>` `/` `halp.toml`
+- `<config_dir>` `/` `halp/halp.toml`
+- `<config_dir>` `/` `halp/config`
+
+`<config_dir>` depends on the platform as shown in the following table:
+
+| Platform | Value                                 | Example                                  |
+| -------- | ------------------------------------- | ---------------------------------------- |
+| Linux    | `$XDG_CONFIG_HOME` or `$HOME`/.config | /home/orhun/.config                      |
+| macOS    | `$HOME`/Library/Application Support   | /Users/Orhun/Library/Application Support |
+| Windows  | `{FOLDERID_RoamingAppData}`           | C:\Users\Orhun\AppData\Roaming           |
+
+See [halp.toml](config/halp.toml) for the default configuration values.
+
+## Funding
+
+If you find `halp` and/or other projects on my [GitHub profile](https://github.com/orhun/) useful, consider supporting me on [GitHub Sponsors](https://github.com/sponsors/orhun) or [becoming a patron](https://www.patreon.com/join/orhunp)!
+
+[![Support me on GitHub Sponsors](https://img.shields.io/github/sponsors/orhun?style=flat&logo=GitHub&labelColor=342a5e&color=684d81&logoColor=white)](https://github.com/sponsors/orhun)
+[![Support me on Patreon](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Fshieldsio-patreon.vercel.app%2Fapi%3Fusername%3Dorhunp%26type%3Dpatrons&style=flat&logo=Patreon&labelColor=342a5e&color=684d81&logoColor=white)](https://patreon.com/join/orhunp)
+[![Support me on Patreon](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Fshieldsio-patreon.vercel.app%2Fapi%3Fusername%3Dorhunp%26type%3Dpledges&style=flat&logo=Patreon&labelColor=342a5e&color=684d81&logoColor=white&label=)](https://patreon.com/join/orhunp)
+
+## Contributing
+
+See our [Contribution Guide](./CONTRIBUTING.md) and please follow the [Code of Conduct](./CODE_OF_CONDUCT.md) in all your interactions with the project.
 
 ## License
 
-The Full Stack FastAPI Template is licensed under the terms of the MIT license.
+Licensed under either of [Apache License Version 2.0](./LICENSE-APACHE) or [The MIT License](./LICENSE-MIT) at your option.
+
+ð¦ ã( Âº \_ Âº ã) - respect crables!
+
+## Copyright
+
+Copyright Â© 2023-2024, [Orhun ParmaksÄ±z](mailto:orhunparmaksiz@gmail.com)
